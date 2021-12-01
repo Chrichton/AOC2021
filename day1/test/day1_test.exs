@@ -1,19 +1,47 @@
 defmodule Day1Test do
   use ExUnit.Case
 
-  # test "sample first star" do
-  #   assert Day1.solve1("sample1") == nil
-  # end
+  test "sample first star" do
+    assert Day1.solve1("sample1") == {8, 263}
+  end
 
-  # test "first star" do
-  #   assert Day1.solve1("star1") == nil
-  # end
+  test "first star" do
+    assert Day1.solve1("star1") == {1388, 5068}
+  end
 
-  # test "sample second star" do
-  #   assert Day1.solve2("sample2") == nil
-  # end
+  test "create_successing_windows" do
+    actual = Day1.create_successing_windows([199, 200, 208, 210, 200, 207])
 
-  # test "second star" do
-  #   assert Day1.solve2("star2") == nil
-  # end
+    expected = [
+      [199, 200, 208],
+      [200, 208, 210],
+      [208, 210, 200],
+      [210, 200, 207]
+    ]
+
+    assert actual == expected
+  end
+
+  test "create_sliding_windows" do
+    # [199, 200, 208, 210, 200, 207]
+    actual =
+      [199, 200, 208, 210, 200, 207]
+      |> Day1.create_sliding_windows()
+
+    expected = [
+      {[199, 200, 208], [200, 208, 210]},
+      {[200, 208, 210], [208, 210, 200]},
+      {[208, 210, 200], [210, 200, 207]}
+    ]
+
+    assert actual == expected
+  end
+
+  test "sample second star" do
+    assert Day1.solve2("sample1") == 5
+  end
+
+  test "second star" do
+    assert Day1.solve2("star1") == 1362
+  end
 end
