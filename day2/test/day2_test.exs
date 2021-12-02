@@ -9,11 +9,11 @@ defmodule Day2Test do
     assert Day2.solve1("star1") == 1_427_868
   end
 
-  # test "sample second star" do
-  #   assert Day1.solve2("sample2") == nil
-  # end
+  test "sample second star" do
+    assert Day2.solve2("sample1") == 900
+  end
 
-  # test "second star" do
-  #   assert Day1.solve2("star2") == nil
-  # end
+  test "second star" do
+    assert Day2.solve2("star1") == 1_568_138_742
+  end
 end

@@ -17,8 +17,20 @@ defmodule Day2 do
   end
 
   def solve2(filename) do
-    filename
-    |> read_input()
+    {horizonal, depth, _} =
+      filename
+      |> read_input()
+      |> Enum.reduce({0, 0, 0}, fn [command, value_str], {horizonal, depth, aim} ->
+        value = String.to_integer(value_str)
+
+        case command do
+          "forward" -> {horizonal + value, depth + aim * value, aim}
+          "up" -> {horizonal, depth, aim - value}
+          "down" -> {horizonal, depth, aim + value}
+        end
+      end)
+
+    horizonal * depth
   end
 
   def read_input(filename) do
