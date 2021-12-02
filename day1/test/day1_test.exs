@@ -2,11 +2,11 @@ defmodule Day1Test do
   use ExUnit.Case
 
   test "sample first star" do
-    assert Day1.solve1("sample1") == {8, 263}
+    assert Day1.solve1("sample1") == 7
   end
 
   test "first star" do
-    assert Day1.solve1("star1") == {1388, 5068}
+    assert Day1.solve1("star1") == 1387
   end
 
   test "create_successing_windows" do

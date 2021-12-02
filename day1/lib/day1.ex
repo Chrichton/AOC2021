@@ -1,12 +1,23 @@
 defmodule Day1 do
   def solve1(filename) do
-    filename
-    |> read_input()
-    |> Enum.reduce({0, 0}, fn depth, {increase_count, last_depth} ->
-      if depth > last_depth,
-        do: {increase_count + 1, depth},
-        else: {increase_count, depth}
-    end)
+    (filename
+     |> read_input()
+     |> Enum.reduce({0, 0}, fn depth, {increase_count, last_depth} ->
+       if depth > last_depth,
+         do: {increase_count + 1, depth},
+         else: {increase_count, depth}
+     end)
+     |> elem(0)) - 1
+
+    # list = read_input(filename)
+
+    # Enum.zip(list, Enum.drop(list, 1))
+    # |> Enum.map(fn {last_depth, depth} ->
+    #   if depth > last_depth,
+    #     do: 1,
+    #     else: 0
+    # end)
+    # |> Enum.sum()
   end
 
   def solve2(filename) do
