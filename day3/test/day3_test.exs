@@ -10,10 +10,10 @@ defmodule Day3Test do
   end
 
   test "sample second star" do
-    assert Day3.solve2("sample1") == 900
+    assert Day3.solve2("sample1") == 230
   end
 
   test "second star" do
-    assert Day3.solve2("star1") == 1_568_138_742
+    assert Day3.solve2("star1") == 2_990_784
   end
 end

@@ -46,8 +46,75 @@ defmodule Day3 do
   end
 
   def solve2(filename) do
-    filename
-    |> read_input()
+    list = read_input(filename)
+
+    oxygen_rating =
+      find_last_binary_most_common_bit(list, 0)
+      |> Enum.join()
+      |> Integer.parse(2)
+      |> elem(0)
+
+    co2_rating =
+      find_last_binary_least_common_bit(list, 0)
+      |> Enum.join()
+      |> Integer.parse(2)
+      |> elem(0)
+
+    oxygen_rating * co2_rating
+  end
+
+  def find_last_binary_most_common_bit([result], _index), do: result
+
+  def find_last_binary_most_common_bit(list, index) do
+    transposed_list = transpose(list)
+
+    most_common_bit =
+      transposed_list
+      |> most_common_bit(index)
+
+    new_list =
+      list
+      |> Enum.filter(&(Enum.at(&1, index) == most_common_bit))
+
+    find_last_binary_most_common_bit(new_list, index + 1)
+  end
+
+  def most_common_bit(list, index) do
+    frequencies =
+      list
+      |> Enum.at(index)
+      |> Enum.frequencies()
+
+    frequencies
+    |> Enum.max_by(fn {_key, count} -> count end, &>/2)
+    |> elem(0)
+  end
+
+  def find_last_binary_least_common_bit([result], _index), do: result
+
+  def find_last_binary_least_common_bit(list, index) do
+    transposed_list = transpose(list)
+
+    least_common_bit =
+      transposed_list
+      |> least_common_bit(index)
+
+    new_list =
+      list
+      |> Enum.filter(&(Enum.at(&1, index) == least_common_bit))
+
+    find_last_binary_least_common_bit(new_list, index + 1)
+  end
+
+  def least_common_bit(list, index) do
+    frequencies =
+      list
+      |> Enum.at(index)
+      |> Enum.frequencies()
+
+    frequencies
+    |> Enum.min_by(fn {_key, count} -> count end)
+    |> elem(0)
   end
 
   def read_input(filename) do
