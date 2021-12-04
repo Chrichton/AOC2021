@@ -71,7 +71,7 @@ defmodule Day4Test do
   end
 
   test "sample second star" do
-    assert Day4.solve2("sample1") == 230
+    assert Day4.solve2("sample1") == 1924
   end
 
   test "second star" do

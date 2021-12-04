@@ -95,8 +95,75 @@ defmodule Day4 do
   end
 
   def solve2(filename) do
-    filename
-    |> read_input()
+    {numbers, boards} =
+      filename
+      |> read_input()
+
+    {winning_numbers, winning_board} = find_last_bingo_board(numbers, 5, boards, nil)
+
+    IO.inspect("SOLVED!!!!")
+    IO.inspect(winning_numbers, label: "winning_numbers")
+    IO.inspect(winning_board, label: "winning_board")
+
+    called_number =
+      winning_numbers
+      |> Enum.reverse()
+      |> Enum.take(1)
+      |> hd()
+
+    sum_unmarked =
+      winning_board
+      |> Enum.map(fn rows ->
+        Enum.reduce(rows, 0, fn number, sum ->
+          if number in winning_numbers,
+            do: sum,
+            else: number + sum
+        end)
+      end)
+      |> Enum.sum()
+
+    sum_unmarked * called_number
+  end
+
+  def find_last_bingo_board(numbers, _index, boards, last_winning_board) when boards == [],
+    do: {numbers, last_winning_board}
+
+  def find_last_bingo_board(numbers, index, boards, last_winning_board) do
+    IO.inspect("ENTRY find_last_bingo_board")
+    IO.inspect(numbers, label: "numbers")
+    IO.inspect(index, label: "index")
+
+    {winning_numbers, winning_board} = find_first_bingo_board(numbers, index, boards)
+
+    IO.inspect(winning_numbers, label: "winning_numbers")
+    IO.inspect(winning_board, label: "winning_board")
+    IO.inspect(boards, label: "boards")
+
+    if winning_board == nil do
+      {numbers, last_winning_board}
+    else
+      remaining_boards =
+        boards
+        |> Enum.reject(&(&1 == winning_board))
+
+      IO.inspect(remaining_boards, label: "remaining_boards")
+      IO.inspect(Enum.count(remaining_boards), label: "remaining_boards count")
+      IO.inspect(Enum.count(winning_numbers), label: "index")
+
+      if boards == remaining_boards do
+        IO.inspect("FINISHED!!!!")
+        {winning_numbers, hd(remaining_boards)}
+      else
+        IO.inspect("NEXT Call")
+
+        find_last_bingo_board(
+          numbers,
+          Enum.count(winning_numbers),
+          remaining_boards,
+          winning_board
+        )
+      end
+    end
   end
 
   def read_input(filename) do
