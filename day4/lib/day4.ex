@@ -4,17 +4,37 @@ defmodule Day4 do
       filename
       |> read_input()
 
-    find_first_bingo_board(numbers, 5, boards)
+    {winning_numbers, winning_board} = find_first_bingo_board(numbers, 5, boards)
+
+    called_number =
+      winning_numbers
+      |> Enum.reverse()
+      |> Enum.take(1)
+      |> hd()
+
+    sum_unmarked =
+      winning_board
+      |> Enum.map(fn rows ->
+        Enum.reduce(rows, 0, fn number, sum ->
+          if number in winning_numbers,
+            do: sum,
+            else: number + sum
+        end)
+      end)
+      |> Enum.sum()
+
+    sum_unmarked * called_number
   end
 
   def find_first_bingo_board(numbers, index, _boards) when index > length(numbers), do: nil
 
   def find_first_bingo_board(numbers, index, boards) do
     actual_numbers = Enum.take(numbers, index)
-    winning_board = find_bingo_board(actual_numbers, boards)
+
+    {winning_numbers, winning_board} = find_bingo_board(actual_numbers, boards)
 
     if winning_board != nil do
-      hd(winning_board)
+      {winning_numbers, hd(winning_board)}
     else
       find_first_bingo_board(numbers, index + 1, boards)
     end
@@ -38,7 +58,7 @@ defmodule Day4 do
       end)
 
     if Enum.count(bingo_boards) > 0 do
-      Enum.take(bingo_boards, 1)
+      {numbers, Enum.take(bingo_boards, 1)}
     else
       bingo_boards =
         transposed_boards
@@ -53,9 +73,9 @@ defmodule Day4 do
         end)
 
       if Enum.count(bingo_boards) > 0 do
-        Enum.take(bingo_boards, 1)
+        {numbers, Enum.take(bingo_boards, 1)}
       else
-        nil
+        {nil, nil}
       end
     end
   end

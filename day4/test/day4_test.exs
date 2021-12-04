@@ -63,17 +63,11 @@ defmodule Day4Test do
   end
 
   test "sample first star" do
-    assert Day4.solve1("sample1") == [
-             [14, 21, 17, 24, 4],
-             [10, 16, 15, 9, 19],
-             [18, 8, 23, 26, 20],
-             [22, 11, 13, 6, 5],
-             [2, 0, 12, 3, 7]
-           ]
+    assert Day4.solve1("sample1") == 4512
   end
 
   test "first star" do
-    assert Day4.solve1("star1") == 3_813_416
+    assert Day4.solve1("star1") == 21607
   end
 
   test "sample second star" do
