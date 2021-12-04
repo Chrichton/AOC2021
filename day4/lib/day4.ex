@@ -5,7 +5,6 @@ defmodule Day4 do
       |> read_input()
 
     find_first_bingo_board(numbers, 5, boards)
-    # find_first_bingo_board(numbers, 12, boards)
   end
 
   def find_first_bingo_board(numbers, index, _boards) when index > length(numbers), do: nil
@@ -14,9 +13,7 @@ defmodule Day4 do
     actual_numbers = Enum.take(numbers, index)
     winning_board = find_bingo_board(actual_numbers, boards)
 
-    IO.inspect(winning_board, label: "winning board")
-
-    if winning_board != [nil] do
+    if winning_board != nil do
       hd(winning_board)
     else
       find_first_bingo_board(numbers, index + 1, boards)
@@ -30,11 +27,14 @@ defmodule Day4 do
 
     bingo_boards =
       boards
-      |> Enum.flat_map(fn board ->
-        board
-        |> Enum.map(fn board_numbers ->
-          find_numbers_in_board_numbers(numbers, board_numbers)
-        end)
+      |> Enum.filter(fn board ->
+        filtered =
+          board
+          |> Enum.filter(fn board_numbers ->
+            check_numbers_in_board_numbers(numbers, board_numbers)
+          end)
+
+        filtered != []
       end)
 
     if Enum.count(bingo_boards) > 0 do
@@ -42,11 +42,14 @@ defmodule Day4 do
     else
       bingo_boards =
         transposed_boards
-        |> Enum.flat_map(fn board ->
-          board
-          |> Enum.map(fn board_numbers ->
-            find_numbers_in_board_numbers(numbers, board_numbers)
-          end)
+        |> Enum.filter(fn board ->
+          filtered =
+            board
+            |> Enum.filter(fn board_numbers ->
+              check_numbers_in_board_numbers(numbers, board_numbers)
+            end)
+
+          filtered != []
         end)
 
       if Enum.count(bingo_boards) > 0 do
@@ -57,18 +60,11 @@ defmodule Day4 do
     end
   end
 
-  def find_numbers_in_board_numbers(numbers, board_numbers) do
-    result =
-      board_numbers
-      |> Enum.all?(fn board_number ->
-        Enum.member?(numbers, board_number)
-      end)
-
-    if result == true do
-      board_numbers
-    else
-      nil
-    end
+  def check_numbers_in_board_numbers(numbers, board_numbers) do
+    board_numbers
+    |> Enum.all?(fn board_number ->
+      Enum.member?(numbers, board_number)
+    end)
   end
 
   def transpose([]), do: []
