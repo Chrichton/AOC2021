@@ -167,21 +167,26 @@ defmodule Day4 do
   end
 
   def read_input(filename) do
-    data =
+    [numbers | boards] =
       File.read!(filename)
-      |> String.split("\n")
+      |> String.split("\n", trim: true)
 
     numbers =
-      data
-      |> Enum.take(1)
-      |> Enum.at(0)
+      numbers
       |> String.split(",")
       |> Enum.map(&String.to_integer/1)
 
     boards =
-      data
-      |> Enum.drop(2)
-      |> build_boards([])
+      boards
+      |> Enum.chunk_every(5)
+      |> Enum.map(fn rows ->
+        rows
+        |> Enum.map(fn row ->
+          row
+          |> String.split(" ", trim: true)
+          |> Enum.map(&String.to_integer/1)
+        end)
+      end)
 
     {numbers, boards}
   end
