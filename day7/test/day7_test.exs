@@ -27,6 +27,6 @@ defmodule Day7Test do
   end
 
   test "second star" do
-    assert Day7.solve2("star1") == nil
+    assert Day7.solve2("star1") == 101_571_302
   end
 end
