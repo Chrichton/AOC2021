@@ -25,6 +25,38 @@ defmodule Day7 do
   def solve2(filename) do
     filename
     |> read_input()
+    |> calculate_fuels2()
+    |> Enum.min_by(fn {_key, count} -> count end)
+    |> elem(1)
+  end
+
+  def calculate_fuels2(crabs) do
+    sorted = Enum.sort(crabs)
+
+    min = hd(sorted)
+    max = hd(sorted |> Enum.reverse())
+    range = min..max
+
+    range
+    |> Enum.map(fn to_position ->
+      fuel = move_all_crabs_to_position2(crabs, to_position)
+      {to_position, fuel}
+    end)
+  end
+
+  def move_all_crabs_to_position2(crabs, position) do
+    crabs
+    |> Enum.reduce(0, fn crab_position, acc ->
+      move_crab_from_to(crab_position, position) + acc
+    end)
+  end
+
+  def move_crab_from_to(from, to) do
+    1..abs(from - to)
+    |> Enum.reduce({1, 0}, fn _, {increment, sum} ->
+      {increment + 1, increment + sum}
+    end)
+    |> elem(1)
   end
 
   def read_input(filename) do
