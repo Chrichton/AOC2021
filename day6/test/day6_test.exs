@@ -24,11 +24,11 @@ defmodule Day6Test do
     assert Day6.solve1("star1") == 365_862
   end
 
-  # test "sample second star" do
-  #   assert Day6.solve2("sample1") == 5
-  # end
+  test "sample second star" do
+    assert Day6.solve2("sample1") == 5
+  end
 
-  # test "second star" do
-  #   assert Day6.solve2("star1") == 1362
-  # end
+  test "second star" do
+    assert Day6.solve2("star1") == 1362
+  end
 end

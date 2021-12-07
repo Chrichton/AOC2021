@@ -9,9 +9,7 @@ defmodule Day6 do
   def generate_lantern_fishs(lantern_fishs, 0), do: lantern_fishs
 
   def generate_lantern_fishs(lantern_fishs, generations) do
-    next =
-      next_generation(lantern_fishs)
-      |> Enum.reverse()
+    next = next_generation(lantern_fishs)
 
     generate_lantern_fishs(next, generations - 1)
   end
@@ -36,6 +34,8 @@ defmodule Day6 do
   def solve2(filename) do
     filename
     |> read_input()
+    |> generate_lantern_fishs(256)
+    |> Enum.count()
   end
 
   def read_input(filename) do
