@@ -9,6 +9,7 @@ defmodule Day7 do
 
   def calculate_fuels(crabs) do
     crabs
+    |> Enum.uniq()
     |> Enum.reduce([], fn crab_position, acc ->
       fuel = move_all_crabs_to_position(crabs, crab_position)
       [{crab_position, fuel} | acc]
@@ -52,11 +53,9 @@ defmodule Day7 do
   end
 
   def move_crab_from_to(from, to) do
-    1..abs(from - to)
-    |> Enum.reduce({1, 0}, fn _, {increment, sum} ->
-      {increment + 1, increment + sum}
-    end)
-    |> elem(1)
+    n = abs(from - to)
+
+    n * (n + 1) / 2
   end
 
   def read_input(filename) do
