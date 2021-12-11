@@ -2,11 +2,14 @@ defmodule Day11 do
   def solve1(filename) do
     filename
     |> read_input()
+    |> process_iterations(5, %{})
   end
 
-  def solve2(filename) do
-    filename
-    |> read_input()
+  def process_iterations(height_map, %{} = _flashed, 0), do: height_map
+
+  def process_iterations(height_map, %{} = flashed, count) do
+    {new_height_map, new_flashed} = next_iteration(height_map, flashed)
+    process_iterations(new_height_map, new_flashed, count - 1)
   end
 
   def get_value(height_map, x, y) do
@@ -19,12 +22,31 @@ defmodule Day11 do
     {length(Enum.at(height_map, 0)), length(height_map)}
   end
 
-  def next_iteration(height_map) do
-    height_map = increment_energy_level(height_map)
-    p_height_map = process_flashes(height_map, %{})
+  def next_iteration(height_map, %{} = flashed) do
+    new_height_map = increment_energy_level(height_map)
+    new_flashed = process_flashes(height_map, flashed)
+    {new_height_map, new_flashed}
   end
 
   def increment_energy_level(height_map) do
+    change_fn = fn {{_x, _y}, value} -> value + 1 end
+    change_energy_level(height_map, change_fn)
+  end
+
+  def increment_energy_level(height_map, []), do: height_map
+
+  def increment_energy_level(height_map, [{nx, ny} | neighbors]) do
+    change_fn = fn {{x, y}, value} ->
+      if {nx, ny} == {x, y},
+        do: value + 1,
+        else: value
+    end
+
+    change_energy_level(height_map, change_fn)
+    |> increment_energy_level(neighbors)
+  end
+
+  def change_energy_level(height_map, change_fn) do
     col_length =
       height_map
       |> Enum.at(0)
@@ -32,11 +54,11 @@ defmodule Day11 do
 
     height_map_with_y_index = Enum.zip(0..(col_length - 1), height_map)
 
-    Enum.map(height_map_with_y_index, fn {_y, line} ->
+    Enum.map(height_map_with_y_index, fn {y, line} ->
       line_with_x_index = Enum.zip(0..(length(line) - 1), line)
 
-      Enum.map(line_with_x_index, fn {_x, value} ->
-        value + 1
+      Enum.map(line_with_x_index, fn {x, value} ->
+        change_fn.({{x, y}, value})
       end)
     end)
   end
@@ -53,11 +75,12 @@ defmodule Day11 do
       line_with_x_index = Enum.zip(0..(length(line) - 1), line)
 
       Enum.map(line_with_x_index, fn {x, value} ->
-        if value == 9 and flashed[{x, y}] do
+        if value == 9 and not flashed[{x, y}] do
           neighbors = get_neighbors(height_map, {x, y})
-          new_height_map = increment_energy_level(height_map, neighbors)
 
+          new_height_map = increment_energy_level(height_map, neighbors)
           new_flashed = Map.put(flashed, {x, y}, true)
+
           process_flashes(new_height_map, new_flashed)
 
           0
@@ -85,6 +108,11 @@ defmodule Day11 do
       x >= 0 and y >= 0 and x < dimension_x and y < dimension_y
     end)
     |> Enum.flat_map(fn x -> x end)
+  end
+
+  def solve2(filename) do
+    filename
+    |> read_input()
   end
 
   def read_input(filename) do
