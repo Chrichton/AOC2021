@@ -32,14 +32,17 @@ defmodule Day11Test do
   end
 
   test "process_flashes" do
-    {height_map, %{} = flashed} =
+    # {height_map, %{} = flashed} =
+    result =
       Day11.process_flashes(
         [[1, 2, 3], [4, 5, 6]],
         %{}
       )
 
-    assert height_map == [[1, 2, 3], [4, 5, 6]]
-    assert Map.keys(flashed) == nil
+    assert result == nil
+
+    # assert height_map == [[1, 2, 3], [4, 5, 6]]
+    # assert Map.keys(flashed) == nil
   end
 
   # test "sample first star" do
