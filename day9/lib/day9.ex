@@ -3,8 +3,7 @@ defmodule Day9 do
     filename
     |> read_input()
     |> get_risk_levels()
-
-    # |> Enum.sum()
+    |> Enum.sum()
   end
 
   def get_risk_levels(height_map) do
@@ -14,16 +13,11 @@ defmodule Day9 do
     end)
   end
 
-  def get_risk_level(height_map, {{x, y} = point, neighbors}) do
+  def get_risk_level(height_map, {{_x, _y} = point, neighbors}) do
     [actual_value] = calculate_values(height_map, [point])
     neighbor_values = calculate_values(height_map, neighbors)
 
     low_point? = Enum.all?(neighbor_values, &(actual_value < &1))
-
-    IO.inspect({x, y}, label: "{x,y}")
-    IO.inspect(actual_value, label: "actual_value")
-    IO.inspect(neighbor_values, label: "neighbor_values")
-    IO.inspect(low_point?, label: "low_point?")
 
     _risk_level =
       if low_point?,

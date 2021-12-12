@@ -83,12 +83,12 @@ defmodule Day9Test do
   end
 
   test "sample first star" do
-    assert Day9.solve1("sample1") == nil
+    assert Day9.solve1("sample1") == 15
   end
 
-  # test "first star" do
-  #   assert Day9.solve1("star1") == nil
-  # end
+  test "first star" do
+    assert Day9.solve1("star1") == 489
+  end
 
   # test "sample second star" do
   #   assert Day9.solve2("sample1") == nil
@@ -98,14 +98,3 @@ defmodule Day9Test do
   #   assert Day9.solve2("star1") == nil
   # end
 end
-
-# height_map = [
-#   [2, 1, 9, 9, 9, 4, 3, 2, 1, 0],
-#   [3, 9, 8, 7, 8, 9, 4, 9, 2, 1],
-#   [9, 8, 5, 6, 7, 8, 9, 8, 9, 2],
-#   [8, 7, 6, 7, 8, 9, 6, 7, 8, 9],
-#   [9, 8, 9, 9, 9, 6, 5, 6, 7, 8]
-# ]
-
-# {2, 3}     = 6
-# {2, 4}     = \a
