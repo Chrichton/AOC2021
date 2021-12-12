@@ -14,7 +14,7 @@ defmodule Day9 do
   end
 
   def get_risk_level(height_map, {{_x, _y} = point, neighbors}) do
-    [actual_value] = calculate_values(height_map, [point])
+    actual_value = calculate_value(height_map, point)
     neighbor_values = calculate_values(height_map, neighbors)
 
     low_point? = Enum.all?(neighbor_values, &(actual_value < &1))
@@ -25,10 +25,15 @@ defmodule Day9 do
         else: 0
   end
 
-  def calculate_values(height_map, points) do
-    Enum.map(points, fn {x, y} ->
+  def calculate_values(height_map, neighbors) do
+    Enum.map(neighbors, fn {x, y} ->
       get_value(height_map, x, y)
     end)
+  end
+
+  def calculate_value(height_map, {_x, _y} = point) do
+    calculate_values(height_map, [point])
+    |> hd
   end
 
   def get_points_with_neighbors(height_map) do
@@ -62,9 +67,52 @@ defmodule Day9 do
   end
 
   def solve2(filename) do
-    filename
-    |> read_input()
+    height_map =
+      filename
+      |> read_input()
+
+    height_map
     |> get_low_points()
+    |> Enum.map(&(get_basin(height_map, &1) |> Enum.count()))
+    |> Enum.sort(:desc)
+    |> Enum.take(3)
+    |> Enum.reduce(1, fn n, acc -> n * acc end)
+  end
+
+  def get_basin(height_map, {x, y} = low_point) do
+    neighbors = get_neighbors(height_map, {x, y})
+    visits = MapSet.new([low_point])
+
+    traverse(height_map, neighbors, visits)
+  end
+
+  def traverse(height_map, neighbors, visits) do
+    IO.inspect(neighbors, label: "neighbors")
+    IO.inspect(visits, label: "visits")
+
+    neighbors
+    |> Enum.flat_map(fn {_x, _y} = point ->
+      if MapSet.member?(visits, point) do
+        visits
+      else
+        neighbors = get_neighbors(height_map, point)
+        allowed_neighbors = MapSet.difference(neighbors, visits)
+        traverse(height_map, allowed_neighbors, MapSet.put(visits, point))
+      end
+    end)
+    |> MapSet.new()
+  end
+
+  def get_neighbors(height_map, {x, y} = point) do
+    dimension_x = length(Enum.at(height_map, 0))
+    dimension_y = length(height_map)
+
+    [{x - 1, y}, {x + 1, y}, {x, y - 1}, {x, y + 1}]
+    |> Enum.filter(fn {x, y} ->
+      x >= 0 and y >= 0 and x < dimension_x and y < dimension_y and
+        calculate_value(height_map, point) != 9
+    end)
+    |> MapSet.new()
   end
 
   def get_low_points(height_map) do
@@ -78,7 +126,7 @@ defmodule Day9 do
   end
 
   def low_point?(height_map, {{_x, _y} = point, neighbors}) do
-    [actual_value] = calculate_values(height_map, [point])
+    actual_value = calculate_value(height_map, point)
     neighbor_values = calculate_values(height_map, neighbors)
 
     Enum.all?(neighbor_values, &(actual_value < &1))

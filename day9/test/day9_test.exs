@@ -132,11 +132,53 @@ defmodule Day9Test do
     assert actual == [{1, 0}, {9, 0}, {2, 2}, {6, 4}]
   end
 
-  test "sample second star" do
-    assert Day9.solve2("sample1") == nil
+  test "get_neighbors" do
+    actual =
+      Day9.get_neighbors(
+        [
+          [1, 2, 3],
+          [3, 4, 5]
+        ],
+        {1, 0}
+      )
+
+    assert actual == [{0, 0}, {2, 0}, {1, 1}]
   end
 
-  # test "second star" do
-  #   assert Day9.solve2("star1") == nil
-  # end
+  test "calculate_value" do
+    actual =
+      Day9.calculate_value(
+        [
+          [1, 2, 3],
+          [3, 4, 5]
+        ],
+        {1, 0}
+      )
+
+    assert actual == 2
+  end
+
+  test "get_basin" do
+    height_map = [
+      [2, 1, 9, 9, 9, 4, 3, 2, 1, 0],
+      [3, 9, 8, 7, 8, 9, 4, 9, 2, 1],
+      [9, 8, 5, 6, 7, 8, 9, 8, 9, 2],
+      [8, 7, 6, 7, 8, 9, 6, 7, 8, 9],
+      [9, 8, 9, 9, 9, 6, 5, 6, 7, 8]
+    ]
+
+    actual = Day9.get_basin(height_map, {0, 0})
+    expected = MapSet.new([{0, 0}, {1, 0}, {0, 1}])
+
+    assert actual == expected
+  end
+
+  test "sample second star" do
+    assert Day9.solve2("sample1") == 1134
+  end
+
+  # @tag "timeout: :infinity"
+  test "second star" do
+    assert Day9.solve2("star1") == nil
+  end
 end
