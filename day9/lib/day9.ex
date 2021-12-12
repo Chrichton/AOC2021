@@ -66,6 +66,8 @@ defmodule Day9 do
     |> Enum.at(x)
   end
 
+  # ----------------------------------------------------------------
+
   def solve2(filename) do
     height_map =
       filename
@@ -91,26 +93,33 @@ defmodule Day9 do
     IO.inspect(visits, label: "visits")
 
     neighbors
-    |> Enum.flat_map(fn {_x, _y} = point ->
-      if MapSet.member?(visits, point) do
+    |> Enum.map(fn {_x, _y} = point ->
+      IO.inspect(point, label: "point")
+      point_neighbors = get_neighbors(height_map, point)
+      allowed_neighbors = MapSet.difference(point_neighbors, visits)
+
+      IO.inspect(point_neighbors, label: "point_neighbors")
+      IO.inspect(allowed_neighbors, label: "allowed_neighbors")
+      # require IEx
+      # IEx.pry()
+
+      if MapSet.to_list(allowed_neighbors) == [] do
         visits
       else
-        neighbors = get_neighbors(height_map, point)
-        allowed_neighbors = MapSet.difference(neighbors, visits)
         traverse(height_map, allowed_neighbors, MapSet.put(visits, point))
       end
     end)
     |> MapSet.new()
   end
 
-  def get_neighbors(height_map, {x, y} = point) do
+  def get_neighbors(height_map, {x, y}) do
     dimension_x = length(Enum.at(height_map, 0))
     dimension_y = length(height_map)
 
     [{x - 1, y}, {x + 1, y}, {x, y - 1}, {x, y + 1}]
     |> Enum.filter(fn {x, y} ->
       x >= 0 and y >= 0 and x < dimension_x and y < dimension_y and
-        calculate_value(height_map, point) != 9
+        calculate_value(height_map, {x, y}) != 9
     end)
     |> MapSet.new()
   end

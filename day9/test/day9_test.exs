@@ -132,17 +132,15 @@ defmodule Day9Test do
     assert actual == [{1, 0}, {9, 0}, {2, 2}, {6, 4}]
   end
 
-  test "get_neighbors" do
-    actual =
-      Day9.get_neighbors(
-        [
-          [1, 2, 3],
-          [3, 4, 5]
-        ],
-        {1, 0}
-      )
+  test "get_neighbors_9" do
+    height_map = [
+      [2, 1],
+      [3, 9],
+      [9, 8]
+    ]
 
-    assert actual == [{0, 0}, {2, 0}, {1, 1}]
+    actual = Day9.get_neighbors(height_map, {0, 1})
+    assert actual == MapSet.new([{0, 0}])
   end
 
   test "calculate_value" do
