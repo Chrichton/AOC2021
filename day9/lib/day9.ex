@@ -9,40 +9,40 @@ defmodule Day9 do
 
   def get_risk_levels(height_map) do
     get_points_with_neighbors(height_map)
-    |> Enum.map(fn {{x, y} = actual_point, neighbors} ->
-      {actual_value, neighbor_values} = calculate_values(height_map, {actual_point, neighbors})
-
-      low_point? = actual_value in neighbor_values
-
-      IO.inspect({x, y}, label: "{x,y}")
-      IO.inspect(actual_value, label: "actual_value")
-      IO.inspect(neighbor_values, label: "neighbor_values")
-      IO.inspect(low_point?, label: "low_point?")
-
-      _risk_level =
-        if low_point?,
-          do: actual_value + 1,
-          else: 0
+    |> Enum.map(fn {{_x, _y} = actual_point, neighbors} ->
+      get_risk_level(height_map, {actual_point, neighbors})
     end)
   end
 
-  def calculate_values(height_map, {{x, y}, neighbors}) do
-    actual_value = get_value(height_map, x, y)
+  def get_risk_level(height_map, {{x, y} = point, neighbors}) do
+    [actual_value] = calculate_values(height_map, [point])
+    neighbor_values = calculate_values(height_map, neighbors)
 
-    neighbor_values =
-      Enum.map(neighbors, fn {nx, ny} ->
-        get_value(height_map, nx, ny)
-      end)
+    low_point? = Enum.all?(neighbor_values, &(actual_value < &1))
 
-    {actual_value, neighbor_values}
+    IO.inspect({x, y}, label: "{x,y}")
+    IO.inspect(actual_value, label: "actual_value")
+    IO.inspect(neighbor_values, label: "neighbor_values")
+    IO.inspect(low_point?, label: "low_point?")
+
+    _risk_level =
+      if low_point?,
+        do: actual_value + 1,
+        else: 0
+  end
+
+  def calculate_values(height_map, points) do
+    Enum.map(points, fn {x, y} ->
+      get_value(height_map, x, y)
+    end)
   end
 
   def get_points_with_neighbors(height_map) do
     dimension_x = length(Enum.at(height_map, 0))
     dimension_y = length(height_map)
 
-    for x <- 0..(dimension_x - 1) do
-      for y <- 0..(dimension_y - 1) do
+    for y <- 0..(dimension_y - 1) do
+      for x <- 0..(dimension_x - 1) do
         possible_points_with_all_neighbors = [
           {x - 1, y},
           {x + 1, y},

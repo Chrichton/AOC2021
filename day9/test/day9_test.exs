@@ -15,28 +15,71 @@ defmodule Day9Test do
     assert actual == expected
   end
 
-  test "get_neighbors" do
+  test "get_points_with_neighbors" do
     map = [
       [1, 2, 3],
       [3, 4, 5]
     ]
 
     expected = [
-      [
-        {{0, 0}, [{1, 0}, {0, 1}]},
-        {{0, 1}, [{1, 1}, {0, 0}]}
-      ],
-      [
-        {{1, 0}, [{0, 0}, {2, 0}, {1, 1}]},
-        {{1, 1}, [{0, 1}, {2, 1}, {1, 0}]}
-      ],
-      [
-        {{2, 0}, [{1, 0}, {2, 1}]},
-        {{2, 1}, [{1, 1}, {2, 0}]}
-      ]
+      {{0, 0}, [{1, 0}, {0, 1}]},
+      {{1, 0}, [{0, 0}, {2, 0}, {1, 1}]},
+      {{2, 0}, [{1, 0}, {2, 1}]},
+      {{0, 1}, [{1, 1}, {0, 0}]},
+      {{1, 1}, [{0, 1}, {2, 1}, {1, 0}]},
+      {{2, 1}, [{1, 1}, {2, 0}]}
     ]
 
-    assert Day9.get_neighbors(map) == expected
+    assert Day9.get_points_with_neighbors(map) == expected
+  end
+
+  test "calculate_values" do
+    actual =
+      Day9.calculate_values(
+        [
+          [1, 2, 3],
+          [3, 4, 5]
+        ],
+        [{1, 0}, {1, 1}]
+      )
+
+    assert actual == [2, 4]
+  end
+
+  test "calculate_values single_value" do
+    height_map = [
+      [0, 0, 9]
+    ]
+
+    [actual] = Day9.calculate_values(height_map, [{2, 0}])
+
+    assert actual == 9
+  end
+
+  test "get_risk_level low_value" do
+    actual =
+      Day9.get_risk_level(
+        [
+          [1, 2, 3],
+          [3, 4, 5]
+        ],
+        {{0, 0}, [{1, 0}, {0, 1}]}
+      )
+
+    assert actual == 2
+  end
+
+  test "get_risk_level not low_value" do
+    actual =
+      Day9.get_risk_level(
+        [
+          [1, 2, 3],
+          [3, 4, 5]
+        ],
+        {{2, 1}, [{2, 0}, {1, 1}]}
+      )
+
+    assert actual == 0
   end
 
   test "sample first star" do
