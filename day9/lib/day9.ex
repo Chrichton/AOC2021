@@ -64,6 +64,24 @@ defmodule Day9 do
   def solve2(filename) do
     filename
     |> read_input()
+    |> get_low_points()
+  end
+
+  def get_low_points(height_map) do
+    get_points_with_neighbors(height_map)
+    |> Enum.filter(fn {{_x, _y} = actual_point, neighbors} ->
+      low_point?(height_map, {actual_point, neighbors})
+    end)
+    |> Enum.map(fn {{_x, _y} = actual_point, _neighbors} ->
+      actual_point
+    end)
+  end
+
+  def low_point?(height_map, {{_x, _y} = point, neighbors}) do
+    [actual_value] = calculate_values(height_map, [point])
+    neighbor_values = calculate_values(height_map, neighbors)
+
+    Enum.all?(neighbor_values, &(actual_value < &1))
   end
 
   def read_input(filename) do

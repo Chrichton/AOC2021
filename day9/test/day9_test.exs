@@ -90,9 +90,51 @@ defmodule Day9Test do
     assert Day9.solve1("star1") == 489
   end
 
-  # test "sample second star" do
-  #   assert Day9.solve2("sample1") == nil
-  # end
+  # --------------------------------------------------
+
+  test "low_point" do
+    actual =
+      Day9.low_point?(
+        [
+          [1, 2, 3],
+          [3, 4, 5]
+        ],
+        {{0, 0}, [{1, 0}, {0, 1}]}
+      )
+
+    assert actual == true
+  end
+
+  test "not low_point" do
+    actual =
+      Day9.low_point?(
+        [
+          [1, 2, 3],
+          [3, 4, 5]
+        ],
+        {{2, 1}, [{2, 0}, {1, 1}]}
+      )
+
+    assert actual == false
+  end
+
+  test "low_points" do
+    height_map = [
+      [2, 1, 9, 9, 9, 4, 3, 2, 1, 0],
+      [3, 9, 8, 7, 8, 9, 4, 9, 2, 1],
+      [9, 8, 5, 6, 7, 8, 9, 8, 9, 2],
+      [8, 7, 6, 7, 8, 9, 6, 7, 8, 9],
+      [9, 8, 9, 9, 9, 6, 5, 6, 7, 8]
+    ]
+
+    actual = Day9.get_low_points(height_map)
+
+    assert actual == [{1, 0}, {9, 0}, {2, 2}, {6, 4}]
+  end
+
+  test "sample second star" do
+    assert Day9.solve2("sample1") == nil
+  end
 
   # test "second star" do
   #   assert Day9.solve2("star1") == nil
