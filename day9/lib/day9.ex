@@ -82,7 +82,7 @@ defmodule Day9 do
   end
 
   def get_basin(height_map, {x, y} = low_point) do
-    neighbors = get_neighbors(height_map, {x, y})
+    neighbors = get_neighbors(height_map, {x, y}, MapSet.new([]))
     visits = MapSet.new([low_point])
 
     traverse(height_map, neighbors, visits)
@@ -90,15 +90,14 @@ defmodule Day9 do
 
   def traverse(height_map, neighbors, visits) do
     neighbors
-    |> Enum.reduce(visits, fn {_x, _y} = point, acc ->
-      point_neighbors = get_neighbors(height_map, point)
-      allowed_neighbors = MapSet.difference(point_neighbors, acc)
+    |> Enum.reduce(visits, fn {_x, _y} = point, previous_visits ->
+      point_neighbors = get_neighbors(height_map, point, previous_visits)
 
-      traverse(height_map, allowed_neighbors, MapSet.put(acc, point))
+      traverse(height_map, point_neighbors, MapSet.put(previous_visits, point))
     end)
   end
 
-  def get_neighbors(height_map, {x, y}) do
+  def get_neighbors(height_map, {x, y}, previous_visits) do
     dimension_x = length(Enum.at(height_map, 0))
     dimension_y = length(height_map)
 
@@ -108,6 +107,7 @@ defmodule Day9 do
         calculate_value(height_map, {x, y}) != 9
     end)
     |> MapSet.new()
+    |> MapSet.difference(previous_visits)
   end
 
   def get_low_points(height_map) do

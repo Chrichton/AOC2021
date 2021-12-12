@@ -139,7 +139,7 @@ defmodule Day9Test do
       [9, 8]
     ]
 
-    actual = Day9.get_neighbors(height_map, {0, 1})
+    actual = Day9.get_neighbors(height_map, {0, 1}, MapSet.new([]))
     assert actual == MapSet.new([{0, 0}])
   end
 
