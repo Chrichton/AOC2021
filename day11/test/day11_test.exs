@@ -19,10 +19,7 @@ defmodule Day11Test do
   test "increment_energy_level for neighbors" do
     actual =
       Day11.increment_energy_level_for_neighbors(
-        [
-          [1, 2, 3],
-          [4, 5, 6]
-        ],
+        [[1, 2, 3], [4, 5, 6]],
         [{2, 1}, {0, 0}]
       )
 
@@ -32,6 +29,17 @@ defmodule Day11Test do
     ]
 
     assert actual == expected
+  end
+
+  test "process_flashes" do
+    {height_map, %{} = flashed} =
+      Day11.process_flashes(
+        [[1, 2, 3], [4, 5, 6]],
+        %{}
+      )
+
+    assert height_map == [[1, 2, 3], [4, 5, 6]]
+    assert Map.keys(flashed) == nil
   end
 
   # test "sample first star" do

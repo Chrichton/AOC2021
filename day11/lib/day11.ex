@@ -72,7 +72,7 @@ defmodule Day11 do
       line_with_x_index = Enum.zip(0..(length(line) - 1), line)
 
       Enum.map(line_with_x_index, fn {x, value} ->
-        if value == 9 and not flashed[{x, y}] do
+        if value > 9 and not flashed[{x, y}] do
           neighbors = get_neighbors(height_map, {x, y})
 
           new_height_map = increment_energy_level_for_neighbors(height_map, neighbors)
@@ -80,9 +80,9 @@ defmodule Day11 do
 
           process_flashes(new_height_map, new_flashed)
 
-          0
+          {0, flashed}
         else
-          value
+          {value, flashed}
         end
       end)
     end)
