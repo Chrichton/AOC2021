@@ -89,27 +89,13 @@ defmodule Day9 do
   end
 
   def traverse(height_map, neighbors, visits) do
-    IO.inspect(neighbors, label: "neighbors")
-    IO.inspect(visits, label: "visits")
-
     neighbors
-    |> Enum.map(fn {_x, _y} = point ->
-      IO.inspect(point, label: "point")
+    |> Enum.reduce(visits, fn {_x, _y} = point, acc ->
       point_neighbors = get_neighbors(height_map, point)
-      allowed_neighbors = MapSet.difference(point_neighbors, visits)
+      allowed_neighbors = MapSet.difference(point_neighbors, acc)
 
-      IO.inspect(point_neighbors, label: "point_neighbors")
-      IO.inspect(allowed_neighbors, label: "allowed_neighbors")
-      # require IEx
-      # IEx.pry()
-
-      if MapSet.to_list(allowed_neighbors) == [] do
-        visits
-      else
-        traverse(height_map, allowed_neighbors, MapSet.put(visits, point))
-      end
+      traverse(height_map, allowed_neighbors, MapSet.put(acc, point))
     end)
-    |> MapSet.new()
   end
 
   def get_neighbors(height_map, {x, y}) do

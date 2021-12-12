@@ -175,8 +175,7 @@ defmodule Day9Test do
     assert Day9.solve2("sample1") == 1134
   end
 
-  # @tag "timeout: :infinity"
   test "second star" do
-    assert Day9.solve2("star1") == nil
+    assert Day9.solve2("star1") == 1_056_330
   end
 end
