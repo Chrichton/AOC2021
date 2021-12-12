@@ -33,17 +33,14 @@ defmodule Day11 do
     change_energy_level(height_map, change_fn)
   end
 
-  def increment_energy_level(height_map, []), do: height_map
-
-  def increment_energy_level(height_map, [{nx, ny} | neighbors]) do
-    change_fn = fn {{x, y}, value} ->
-      if {nx, ny} == {x, y},
+  def increment_energy_level_for_neighbors(height_map, neighbors) do
+    change_fn = fn {{_x, _y} = point, value} ->
+      if point in neighbors,
         do: value + 1,
         else: value
     end
 
     change_energy_level(height_map, change_fn)
-    |> increment_energy_level(neighbors)
   end
 
   def change_energy_level(height_map, change_fn) do
@@ -78,7 +75,7 @@ defmodule Day11 do
         if value == 9 and not flashed[{x, y}] do
           neighbors = get_neighbors(height_map, {x, y})
 
-          new_height_map = increment_energy_level(height_map, neighbors)
+          new_height_map = increment_energy_level_for_neighbors(height_map, neighbors)
           new_flashed = Map.put(flashed, {x, y}, true)
 
           process_flashes(new_height_map, new_flashed)
