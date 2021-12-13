@@ -65,7 +65,7 @@ defmodule Day13 do
   def flip_x(points, fold_x) do
     points
     |> Enum.map(fn {x, y} ->
-      new_x = fold_x - (x - fold_x)
+      new_x = 2 * fold_x - x
       {new_x, y}
     end)
   end
@@ -73,7 +73,7 @@ defmodule Day13 do
   def flip_y(points, fold_y) do
     points
     |> Enum.map(fn {x, y} ->
-      new_y = fold_y - (y - fold_y)
+      new_y = 2 * fold_y - y
       {x, new_y}
     end)
   end
