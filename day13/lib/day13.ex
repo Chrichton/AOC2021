@@ -1,13 +1,16 @@
 defmodule Day13 do
   def solve1(filename) do
-    {points, _instructions} =
-      filename
-      |> read_input()
+    filename
+    |> read_input()
+    |> then(fn {points, [instruction | _instructions]} ->
+      {fold_char, value} = instruction
 
-    points
-    |> fold_y()
-
-    # |> Enum.count()
+      case fold_char do
+        "x" -> fold_x(points, value)
+        "y" -> fold_y(points, value)
+      end
+    end)
+    |> Enum.count()
   end
 
   def solve2(filename) do
@@ -15,15 +18,7 @@ defmodule Day13 do
     |> read_input()
   end
 
-  def fold_x(points) do
-    dimension_x =
-      Enum.max_by(points, fn {x, _y} ->
-        x
-      end)
-      |> elem(0)
-
-    fold_x = round(dimension_x / 2)
-
+  def fold_x(points, fold_x) do
     left_points =
       points
       |> Enum.filter(fn {x, _y} ->
@@ -39,21 +34,13 @@ defmodule Day13 do
 
     flipped_right_points =
       right_points
-      |> flip_x()
+      |> flip_x(fold_x)
       |> MapSet.new()
 
     MapSet.union(left_points, flipped_right_points)
   end
 
-  def fold_y(points) do
-    dimension_y =
-      Enum.max_by(points, fn {_x, y} ->
-        y
-      end)
-      |> elem(1)
-
-    fold_y = round(dimension_y / 2)
-
+  def fold_y(points, fold_y) do
     upper_points =
       points
       |> Enum.filter(fn {_x, y} ->
@@ -69,44 +56,24 @@ defmodule Day13 do
 
     flipped_lower_points =
       lower_points
-      |> flip_y()
+      |> flip_y(fold_y)
       |> MapSet.new()
 
-    IO.inspect(dimension_y, label: "dimension_y")
-    IO.inspect(fold_y, label: "fold_y")
-    IO.inspect(points, label: "points")
-    IO.inspect(upper_points, label: "upper_points")
-    IO.inspect(lower_points, label: "lower_points")
-    IO.inspect(flipped_lower_points, label: "flipped_lower_points")
-
     MapSet.union(upper_points, flipped_lower_points)
-    |> IO.inspect(label: "result")
   end
 
-  def flip_x(points) do
-    max_x =
-      Enum.max_by(points, fn {x, _y} ->
-        x
-      end)
-      |> elem(0)
-
+  def flip_x(points, fold_x) do
     points
     |> Enum.map(fn {x, y} ->
-      new_x = abs(x - max_x)
+      new_x = fold_x - (x - fold_x)
       {new_x, y}
     end)
   end
 
-  def flip_y(points) do
-    max_y =
-      Enum.max_by(points, fn {_x, y} ->
-        y
-      end)
-      |> elem(0)
-
+  def flip_y(points, fold_y) do
     points
     |> Enum.map(fn {x, y} ->
-      new_y = abs(y - max_y)
+      new_y = fold_y - (y - fold_y)
       {x, new_y}
     end)
   end
@@ -142,24 +109,3 @@ defmodule Day13 do
     {points, instructions}
   end
 end
-
-[
-  {0, 3},
-  {0, 13},
-  {0, 14},
-  {1, 10},
-  {2, 14},
-  {3, 0},
-  {3, 4},
-  {4, 1},
-  {4, 11},
-  {6, 0},
-  {6, 10},
-  {6, 12},
-  {8, 4},
-  {8, 10},
-  {9, 0},
-  {9, 10},
-  {10, 4},
-  {10, 12}
-]
