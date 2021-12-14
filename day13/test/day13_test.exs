@@ -32,11 +32,8 @@ defmodule Day13Test do
     assert Day13.solve1("star1") == 695
   end
 
-  # test "sample second star" do
-  #   assert Day13.solve2("sample1") == 288_957
-  # end
-
-  # test "second star" do
-  #   assert Day13.solve2("star1") == 2_429_644_557
-  # end
+  test "second star" do
+    Day13.solve2("star1")
+    |> IO.puts()
+  end
 end

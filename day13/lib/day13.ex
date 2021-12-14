@@ -13,11 +13,6 @@ defmodule Day13 do
     |> Enum.count()
   end
 
-  def solve2(filename) do
-    filename
-    |> read_input()
-  end
-
   def fold_x(points, fold_x) do
     left_points =
       points
@@ -76,6 +71,63 @@ defmodule Day13 do
       new_y = 2 * fold_y - y
       {x, new_y}
     end)
+  end
+
+  def solve2(filename) do
+    filename
+    |> read_input()
+    |> then(fn {points, instructions} ->
+      Enum.flat_map(instructions, fn instruction ->
+        {fold_char, value} = instruction
+
+        case fold_char do
+          "x" -> fold_x(points, value)
+          "y" -> fold_y(points, value)
+        end
+      end)
+      |> MapSet.new()
+      |> visualize_puzzle()
+    end)
+  end
+
+  def visualize_puzzle(points) do
+    min_x =
+      points
+      |> Enum.min_by(fn {x, _y} ->
+        x
+      end)
+      |> elem(0)
+
+    max_x =
+      points
+      |> Enum.max_by(fn {x, _y} ->
+        x
+      end)
+      |> elem(0)
+
+    min_y =
+      points
+      |> Enum.min_by(fn {_x, y} ->
+        y
+      end)
+      |> elem(1)
+
+    max_y =
+      points
+      |> Enum.max_by(fn {x, _y} ->
+        x
+      end)
+      |> elem(1)
+
+    for y <- min_y..(max_y - 1) do
+      for x <- min_x..(max_x - 1) do
+        if MapSet.member?(points, {x, y}),
+          do: "#",
+          else: "."
+      end
+      |> Enum.join(" ")
+    end
+    |> Enum.join("\n")
   end
 
   def read_input(filename) do
