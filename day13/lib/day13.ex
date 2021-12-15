@@ -77,15 +77,13 @@ defmodule Day13 do
     filename
     |> read_input()
     |> then(fn {points, instructions} ->
-      Enum.flat_map(instructions, fn instruction ->
-        {fold_char, value} = instruction
-
+      instructions
+      |> Enum.reduce(points, fn {fold_char, value}, acc ->
         case fold_char do
-          "x" -> fold_x(points, value)
-          "y" -> fold_y(points, value)
+          "x" -> fold_x(acc, value)
+          "y" -> fold_y(acc, value)
         end
       end)
-      |> MapSet.new()
       |> visualize_puzzle()
     end)
   end
@@ -114,18 +112,18 @@ defmodule Day13 do
 
     max_y =
       points
-      |> Enum.max_by(fn {x, _y} ->
-        x
+      |> Enum.max_by(fn {_x, y} ->
+        y
       end)
       |> elem(1)
 
-    for y <- min_y..(max_y - 1) do
-      for x <- min_x..(max_x - 1) do
+    for y <- min_y..max_y do
+      for x <- min_x..max_x do
         if MapSet.member?(points, {x, y}),
           do: "#",
           else: "."
       end
-      |> Enum.join(" ")
+      |> Enum.join()
     end
     |> Enum.join("\n")
   end

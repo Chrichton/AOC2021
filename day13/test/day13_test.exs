@@ -32,8 +32,34 @@ defmodule Day13Test do
     assert Day13.solve1("star1") == 695
   end
 
+  test "sample second star" do
+    actual = Day13.solve2("sample1")
+
+    expected = """
+    #####
+    #...#
+    #...#
+    #...#
+    #####\
+    """
+
+    assert actual == expected
+  end
+
   test "second star" do
-    Day13.solve2("star1")
-    |> IO.puts()
+    actual = Day13.solve2("star1")
+
+    expected = """
+    .##....##.####..##..#....#..#.###....##
+    #..#....#....#.#..#.#....#..#.#..#....#
+    #.......#...#..#....#....#..#.#..#....#
+    #.##....#..#...#.##.#....#..#.###.....#
+    #..#.#..#.#....#..#.#....#..#.#....#..#
+    .###..##..####..###.####..##..#.....##.\
+    """
+
+    assert actual == expected
   end
 end
+
+"JZGLUPJ"
