@@ -30,21 +30,31 @@ defmodule Day16 do
       |> String.slice(3, 3)
       |> String.to_integer(2)
 
-    # if packet_type_id != 4 do
-    #   _lengt_type_id =
-    #     binary_string
-    #     |> String.slice(7, 1)
+    if packet_type_id != 4 do
+      length_type_id =
+        binary_string
+        |> String.slice(7, 1)
 
-    #   _sub_packet_length =
-    #     binary_string
-    #     |> String.slice(8, 15)
-    #     |> String.to_integer(2)
+      if length_type_id != "0" do
+        sub_packet_length =
+          binary_string
+          |> String.slice(8, 15)
+          |> String.to_integer(2)
 
-    #   decode_package_lengths(
-    #     String.slice(binary_string, 23),
-    #     String.length(binary_string)
-    #   )
-    # end
+        decode_package_lengths(
+          String.slice(
+            binary_string,
+            23,
+            String.length(binary_string)
+          ),
+          sub_packet_length
+        )
+      else
+        []
+      end
+    else
+      []
+    end
 
     packet_version
   end
