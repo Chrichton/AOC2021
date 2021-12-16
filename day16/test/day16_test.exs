@@ -28,13 +28,22 @@ defmodule Day16Test do
     assert actual == 5
   end
 
-  test "decode operator package" do
+  test "decode operator package 0" do
     actual =
       "38006F45291200"
       |> Day16.decode_hex()
       |> Day16.decode_binary()
 
     assert actual == [1, 2, 3]
+  end
+
+  test "decode operator package 1" do
+    actual =
+      "EE00D40C823060"
+      |> Day16.decode_hex()
+      |> Day16.decode_binary()
+
+    assert actual == [4, "00000000011", "01010000001", "10010000010"]
   end
 
   test "sample first star" do
