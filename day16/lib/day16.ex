@@ -30,36 +30,51 @@ defmodule Day16 do
       |> String.slice(3, 3)
       |> String.to_integer(2)
 
-    if packet_type_id != 4 do
-      length_type_id =
-        binary_string
-        |> String.slice(7, 1)
+    additional =
+      if packet_type_id != 4 do
+        length_type_id =
+          binary_string
+          |> String.slice(6, 1)
 
-      if length_type_id != "0" do
+        i =
+          if length_type_id == "0",
+            # next 15 bits = total lenght of sub_packets
+            d: 15,
+            # next 11 bits = number of sub_packets
+            else: 11
+
         sub_packet_length =
           binary_string
-          |> String.slice(8, 15)
+          |> String.slice(7, 11)
           |> String.to_integer(2)
+
+        IO.inspect(binary_string, label: "binary_string")
+        IO.inspect(sub_packet_length, label: "sub_packet_length")
 
         decode_package_lengths(
           String.slice(
             binary_string,
-            23,
+            18,
             String.length(binary_string)
           ),
-          sub_packet_length
+          11
         )
       else
         []
       end
-    else
-      []
-    end
 
-    packet_version
+    [packet_version | additional]
   end
 
-  def decode_package_lengths(_binary_string, _package_length) do
+  "1101000101001010010001001000000000"
+  "11101110000000001101010000001100100000100011000001100000"
+
+  def decode_package_lengths(binary_string, package_length) do
+    binary_string
+    |> IO.inspect(binary_string, label: "binary_string")
+    |> String.codepoints()
+    |> Enum.chunk_every(package_length)
+    |> Enum.map(&Enum.join/1)
   end
 
   def decode_all_values(binary_string) do
