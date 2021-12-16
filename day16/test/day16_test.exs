@@ -25,17 +25,17 @@ defmodule Day16Test do
       |> Day16.decode_hex()
       |> Day16.decode_binary()
 
-    assert actual == 5
+    assert actual == [5]
   end
 
-  test "decode operator package 0" do
-    actual =
-      "38006F45291200"
-      |> Day16.decode_hex()
-      |> Day16.decode_binary()
+  # test "decode operator package 0" do
+  #   actual =
+  #     "38006F45291200"
+  #     |> Day16.decode_hex()
+  #     |> Day16.decode_binary()
 
-    assert actual == [1, 2, 3]
-  end
+  #   assert actual == [1, 2, 3]
+  # end
 
   test "decode operator package 1" do
     actual =
@@ -46,9 +46,9 @@ defmodule Day16Test do
     assert actual == [4, "00000000011", "01010000001", "10010000010"]
   end
 
-  test "sample first star" do
-    assert Day16.solve1("sample1") == 17
-  end
+  # test "sample first star" do
+  #   assert Day16.solve1("sample1") == 17
+  # end
 
   #   test "first star" do
   #     assert Day16.solve1("star1") == 695
@@ -62,3 +62,7 @@ defmodule Day16Test do
   #     assert Day16.solve2("star1") == nil
   #   end
 end
+
+"000000000011011"
+"11010001010"
+"0101001000100100"

@@ -9,6 +9,11 @@ defmodule Day16 do
   def decode_hex(hex_string) do
     Base.decode16!(hex_string)
     |> :binary.bin_to_list()
+    |> decode_literal()
+  end
+
+  def decode_literal(binary_string_list) do
+    binary_string_list
     |> Enum.reduce("", fn number, acc ->
       binary_string =
         number
