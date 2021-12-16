@@ -22,19 +22,34 @@ defmodule Day16 do
   def decode_binary(binary_string) do
     packet_version =
       binary_string
-      |> String.slice(3, String.length(binary_string))
+      |> String.slice(6, 3)
+      |> String.to_integer(2)
+
+    packet_type_id =
+      binary_string
       |> String.slice(3, 3)
       |> String.to_integer(2)
 
-    # packet_type_id =
-    #   binary_string
-    #   |> Enum.take(3)
-    #   |> String.to_integer(2)
+    # if packet_type_id != 4 do
+    #   _lengt_type_id =
+    #     binary_string
+    #     |> String.slice(7, 1)
 
-    # if packet_type_id == 4 do
-    #   decode_all_values(Enum.drop(binary_string, 6))
-    # else
+    #   _sub_packet_length =
+    #     binary_string
+    #     |> String.slice(8, 15)
+    #     |> String.to_integer(2)
+
+    #   decode_package_lengths(
+    #     String.slice(binary_string, 23),
+    #     String.length(binary_string)
+    #   )
     # end
+
+    packet_version
+  end
+
+  def decode_package_lengths(_binary_string, _package_length) do
   end
 
   def decode_all_values(binary_string) do

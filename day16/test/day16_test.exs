@@ -28,6 +28,15 @@ defmodule Day16Test do
     assert actual == 5
   end
 
+  # test "decode operator package" do
+  #   actual =
+  #     "00111000000000000110111101000101001010010001001000000000"
+  #     |> Day16.decode_hex()
+  #     |> Day16.decode_binary()
+
+  #   assert actual == 5
+  # end
+
   test "sample first star" do
     assert Day16.solve1("sample1") == 17
   end
