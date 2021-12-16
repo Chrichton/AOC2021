@@ -19,6 +19,15 @@ defmodule Day16Test do
     assert actual == "110100101111111000101000"
   end
 
+  test "decode normal package" do
+    actual =
+      "D2FE28"
+      |> Day16.decode_hex()
+      |> Day16.decode_binary()
+
+    assert actual == 5
+  end
+
   test "sample first star" do
     assert Day16.solve1("sample1") == 17
   end
