@@ -17,6 +17,13 @@ defmodule Day17 do
     end)
   end
 
+  def target_max_x(target) do
+    target
+    |> MapSet.to_list()
+    |> Enum.max_by(fn {_x, y} -> y end)
+    |> elem(1)
+  end
+
   def next_position({x, y} = _point, {vx, vy} = _velocity) do
     next_position = {{x + vx}, {y + vy}}
     next_velocity = {max(vx, vx - 1), vy - 1}
