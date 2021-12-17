@@ -19,6 +19,16 @@ defmodule Day16Test do
     assert actual == "110100101111111000101000"
   end
 
+  test "decode_literal" do
+    # assert Day16.decode_literal("11010001010") == 10
+    # assert Day16.decode_literal("01010000001") == 1
+    # assert Day16.decode_literal("10010000010") == 2
+    # assert Day16.decode_literal("00110000011") == 3
+    # assert Day16.decode_literal("101001000100100") == 20
+
+    assert Day16.decode_all_values("1000100100") == 20
+  end
+
   test "decode normal package" do
     actual =
       "D2FE28"
@@ -43,7 +53,7 @@ defmodule Day16Test do
       |> Day16.decode_hex()
       |> Day16.decode_binary()
 
-    assert actual == [4, "00000000011", "01010000001", "10010000010"]
+    assert actual == [4, 3, 1, 2]
   end
 
   # test "sample first star" do
@@ -62,7 +72,3 @@ defmodule Day16Test do
   #     assert Day16.solve2("star1") == nil
   #   end
 end
-
-"000000000011011"
-"11010001010"
-"0101001000100100"

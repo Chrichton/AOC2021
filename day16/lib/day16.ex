@@ -9,11 +9,6 @@ defmodule Day16 do
   def decode_hex(hex_string) do
     Base.decode16!(hex_string)
     |> :binary.bin_to_list()
-    |> decode_literal()
-  end
-
-  def decode_literal(binary_string_list) do
-    binary_string_list
     |> Enum.reduce("", fn number, acc ->
       binary_string =
         number
@@ -22,6 +17,28 @@ defmodule Day16 do
 
       acc <> binary_string
     end)
+  end
+
+  def decode_literal(binary_string) do
+    # binary_string
+    # |> String.slice(8, String.length(binary_string))
+    # |> String.to_integer(2)
+
+    """
+    20              -> "10100"
+    padding with 0  -> "00010100"
+    chunk           ->  "0001 0100"
+    blocks 1 last 0 -> "1000100100"
+
+    20
+    0101001000100100 -> 01010 01000 10010 ->
+    """
+
+    chunks =
+      binary_string
+      |> String.codepoints()
+      |> Enum.chunk_every(5)
+      |> Enum.map(fn chunk -> Enum.drop(chunk, 1) end)
   end
 
   def decode_binary(binary_string) do
@@ -78,8 +95,7 @@ defmodule Day16 do
     |> Enum.chunk_every(chunk_size)
     |> Enum.map(&Enum.join/1)
     |> Enum.take(package_length)
-
-    # |> Enum.map(fn binary_string -> String.to_integer(binary_string, 2) end)
+    |> Enum.map(&decode_literal/1)
   end
 
   def decode_all_values(binary_string) do
