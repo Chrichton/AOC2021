@@ -21,7 +21,7 @@ defmodule Day15 do
     end_point = {dimension_x - 1, dimension_y - 1}
 
     all_points(height_map)
-    |> Enum.reduce(Graph.new(type: :undirected), fn {_x, _y} = point, graph ->
+    |> Enum.reduce(Graph.new(), fn {_x, _y} = point, graph ->
       get_neighbors(height_map, point)
       |> Enum.reduce(graph, fn {_xn, _yn} = neighbor, graph ->
         Graph.add_edge(graph, point, neighbor, weight: get_value(height_map, neighbor))
