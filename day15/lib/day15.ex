@@ -2,40 +2,32 @@ defmodule Day15 do
   def solve1(filename) do
     filename
     |> read_input()
-    |> find_lowest_risk_path()
+    |> then(fn height_map ->
+      height_map
+      |> find_lowest_risk_path()
+      |> Enum.drop(1)
+      |> Enum.map(fn {_x, _y} = point ->
+        get_value(height_map, point)
+      end)
+      |> Enum.sum()
+    end)
   end
 
   def find_lowest_risk_path(height_map) do
+    dimension_x = length(Enum.at(height_map, 0))
+    dimension_y = length(height_map)
+
     start_point = {0, 0}
+    end_point = {dimension_x - 1, dimension_y - 1}
 
-    traverse(
-      height_map,
-      [start_point],
-      %{}
-    )
-  end
-
-  def traverse(_height_map, [], visits) do
-    visits
-    |> IO.inspect(label: "visits---------")
-  end
-
-  def traverse(height_map, points, visits) do
-    Enum.map(points, fn {_x, _y} = point ->
-      visits =
-        Map.get_and_update(visits, point, fn current_value ->
-          if current_value == nil do
-            {current_value, get_value(height_map, point)}
-          else
-            {current_value, current_value + get_value(height_map, point)}
-          end
-        end)
-        |> elem(1)
-
-      neighbors = get_neighbors(height_map, point, visits) |> IO.inspect(label: "neighbors")
-
-      traverse(height_map, neighbors, visits)
+    all_points(height_map)
+    |> Enum.reduce(Graph.new(type: :undirected), fn {_x, _y} = point, graph ->
+      get_neighbors(height_map, point)
+      |> Enum.reduce(graph, fn {_xn, _yn} = neighbor, graph ->
+        Graph.add_edge(graph, point, neighbor, weight: get_value(height_map, neighbor))
+      end)
     end)
+    |> Graph.get_shortest_path(start_point, end_point)
   end
 
   def get_value(height_map, {x, y}) do
@@ -44,7 +36,19 @@ defmodule Day15 do
     |> Enum.at(x)
   end
 
-  def get_neighbors(height_map, {x, y}, previous_visits) do
+  def all_points(height_map) do
+    dimension_x = length(Enum.at(height_map, 0))
+    dimension_y = length(height_map)
+
+    for x <- 0..(dimension_x - 1) do
+      for y <- 0..(dimension_y - 1) do
+        {x, y}
+      end
+    end
+    |> Enum.flat_map(fn x -> x end)
+  end
+
+  def get_neighbors(height_map, {x, y}) do
     dimension_x = length(Enum.at(height_map, 0))
     dimension_y = length(height_map)
 
@@ -52,14 +56,6 @@ defmodule Day15 do
     |> Enum.filter(fn {x, y} ->
       x >= 0 and y >= 0 and x < dimension_x and y < dimension_y
     end)
-    |> MapSet.new()
-    |> MapSet.difference(get_points(previous_visits))
-    |> MapSet.to_list()
-  end
-
-  def get_points(%{} = visits) do
-    Map.keys(visits)
-    |> MapSet.new()
   end
 
   def solve2(filename) do
