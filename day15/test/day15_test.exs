@@ -40,6 +40,7 @@ defmodule Day15Test do
   end
 
   test "second star" do
+    # too low
     assert Day15.solve2("star1") == 1283
   end
 end

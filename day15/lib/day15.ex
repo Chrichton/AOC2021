@@ -20,7 +20,7 @@ defmodule Day15 do
     start_point = {0, 0}
     end_point = {dimension_x - 1, dimension_y - 1}
 
-    all_points(height_map)
+    all_points(dimension_x, dimension_y)
     |> Enum.reduce(Graph.new(), fn {_x, _y} = point, graph ->
       get_neighbors(height_map, point)
       |> Enum.reduce(graph, fn {_xn, _yn} = neighbor, graph ->
@@ -36,10 +36,7 @@ defmodule Day15 do
     |> Enum.at(x)
   end
 
-  def all_points(height_map) do
-    dimension_x = length(Enum.at(height_map, 0))
-    dimension_y = length(height_map)
-
+  def all_points(dimension_x, dimension_y) do
     for x <- 0..(dimension_x - 1) do
       for y <- 0..(dimension_y - 1) do
         {x, y}
