@@ -58,9 +58,60 @@ defmodule Day15 do
     end)
   end
 
+  # ----------------------------------------------------------------
+
+  def add_rows(height_map) do
+    next_columns(height_map)
+    |> next_rows()
+  end
+
+  def next_number(number) do
+    if number + 1 == 10,
+      do: 1,
+      else: number + 1
+  end
+
+  def next_numbers(list) do
+    for row <- list do
+      for number <- row do
+        next_number(number)
+      end
+    end
+  end
+
+  def next_rows(list), do: next_rows(list, next_numbers(list), 4)
+  def next_rows(list, _list_to_add, 0), do: list
+
+  def next_rows(list, list_to_add, count) do
+    next_rows(list ++ list_to_add, next_numbers(list_to_add), count - 1)
+  end
+
+  def next_columns(list), do: next_columns(list, next_numbers(list), 4)
+  def next_columns(list, _list_to_add, 0), do: list
+
+  def next_columns(list, list_to_add, count) do
+    next_columns(add_to_columns(list, list_to_add), next_numbers(list_to_add), count - 1)
+  end
+
+  def add_to_columns(list, list_to_add) do
+    list
+    |> Enum.zip(list_to_add)
+    |> Enum.map(fn {left, right} -> left ++ right end)
+  end
+
   def solve2(filename) do
     filename
     |> read_input()
+    |> add_rows()
+    |> then(fn height_map ->
+      height_map
+      |> find_lowest_risk_path()
+      |> Enum.drop(1)
+      |> Enum.map(fn {_x, _y} = point ->
+        get_value(height_map, point)
+      end)
+      |> Enum.sum()
+    end)
   end
 
   def read_input(filename) do
