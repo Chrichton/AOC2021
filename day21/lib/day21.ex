@@ -18,25 +18,28 @@ defmodule Day21 do
         {results, dice} = throw_dice_3_times(dice)
         {actual_score_player1, track_player1} = move_pawn(track_player1, results)
 
-        {results, dice} = throw_dice_3_times(dice)
-        {actual_score_player2, track_player2} = move_pawn(track_player2, results)
-
-        roll_count = roll_count + 6
         score_player1 = score_player1 + actual_score_player1
-        score_player2 = score_player2 + actual_score_player2
+        roll_count = roll_count + 3
 
-        cond do
-          score_player1 >= 1000 ->
-            {:halt, score_player2 * roll_count}
+        if score_player1 >= 1000 do
+          {:halt, score_player2 * roll_count}
+        else
+          {results, dice} = throw_dice_3_times(dice)
+          {actual_score_player2, track_player2} = move_pawn(track_player2, results)
 
-          score_player2 >= 1000 ->
-            {:halt, score_player1 * roll_count}
+          score_player2 = score_player2 + actual_score_player2
+          roll_count = roll_count + 3
 
-          true ->
-            result =
-              {roll_count, dice, score_player1, track_player1, score_player2, track_player2}
+          cond do
+            score_player2 >= 1000 ->
+              {:halt, score_player1 * roll_count}
 
-            {:cont, result}
+            true ->
+              result =
+                {roll_count, dice, score_player1, track_player1, score_player2, track_player2}
+
+              {:cont, result}
+          end
         end
       end
     )

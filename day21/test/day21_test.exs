@@ -20,7 +20,7 @@ defmodule Day21Test do
   end
 
   test "sample first star" do
-    assert Day21.solve1("sample1") == 17
+    assert Day21.solve1("sample1") == 739_785
   end
 
   test "first star" do
