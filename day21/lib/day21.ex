@@ -10,13 +10,45 @@ defmodule Day21 do
     track_player1 = Stream.cycle(1..10) |> Stream.drop(position_player1 - 1)
     track_player2 = Stream.cycle(1..10) |> Stream.drop(position_player2 - 1)
 
-    1..3
-    |> Enum.reduce({0, dice}, fn _, {sum, dice} ->
-      {number, new_dice} = throw_dice(dice)
-      {number + sum, new_dice}
-    end)
+    # {results, dice} = throw_dice_3_times(dice)
+    # {score, track_player1} = move_pawn(track_player1, results)
+
+    # {results, dice} = throw_dice_3_times(dice)
+    # {score, track_player2} = move_pawn(track_player2, results)
+
+    1
+    |> Stream.cycle()
+    |> Enum.reduce_while(
+      {0, dice, 0, track_player1, 0, track_player2},
+      fn _, {roll_count, dice, score_payer1, track_player1, score_player2, track_player2} ->
+        {results, dice} = throw_dice_3_times(dice)
+        {actual_score_player1, track_player1} = move_pawn(track_player1, results)
+
+        {results, dice} = throw_dice_3_times(dice)
+        {actual_score_player2, track_player2} = move_pawn(track_player2, results)
+
+        {roll_count + 6, dice, score_payer1 + actual_score_player1, track_player1,
+         score_player2 + actual_score_player2, track_player2}
+      end
+    )
 
     # {number, dice} = throw_dice(dice)
+  end
+
+  def move_pawn(track, results) do
+    track = Stream.drop(track, results)
+    [score] = Enum.take(track, 1)
+
+    {score, track}
+  end
+
+  def throw_dice_3_times(dice) do
+    1..3
+    |> Enum.reduce({0, dice}, fn _, {sum, dice} ->
+      {number, dice} = throw_dice(dice)
+
+      {number + sum, dice}
+    end)
   end
 
   def throw_dice(dice) do
