@@ -19,31 +19,19 @@ defmodule Day14 do
     template
     |> all_pairs()
     |> Enum.take(3)
-
-    # |> Enum.reduce(template, fn key, acc ->
-    #   value = rules[key]
-
-    #   if value != nil do
-    #     first = String.first(key)
-    #     second = String.last(key)
-    #     replacement = first <> value <> second
-    #     result = String.replace(acc, key, replacement, global: false)
-
-    #     IO.inspect(acc, label: "acc")
-    #     IO.inspect(replacement, label: "replacement")
-    #     IO.inspect(result, label: "result")
-    #   else
-    #     acc
-    #   end
-    # end)
+    |> then(fn pairs ->
+      replace_in_template(template, rules, pairs)
+    end)
   end
 
   def index_of(string, search_string) do
-    :binary.match(
-      string,
-      search_string
-      |> elem(0)
-    )
+    case :binary.match(
+           string,
+           search_string
+         ) do
+      :nomatch -> -1
+      result -> result |> elem(0)
+    end
   end
 
   def replace_in_template(template, rules, [first_key, second_key, third_key]) do
@@ -52,18 +40,15 @@ defmodule Day14 do
     third_index = index_of(template, third_key)
 
     result =
-      String.slice(template, 0, first_index - 1) <>
-        rules[first_key] <> String.slice(template, first_index)
+      String.slice(template, 0, first_index + 1) <>
+        rules[first_key] <> String.slice(template, first_index + 1, String.length(template))
 
     result =
-      String.slice(result, 0, second_index) <>
-        rules[second_key] <> String.slice(result, second_index + 1)
+      String.slice(result, 0, second_index + 2) <>
+        rules[second_key] <> String.slice(result, second_index + 2, String.length(result))
 
-    result =
-      String.slice(result, 0, third_index + 1) <>
-        rules[third_key] <> String.slice(result, third_index + 2)
-
-    result
+    String.slice(result, 0, third_index + 3) <>
+      rules[third_key] <> String.slice(result, third_index + 3, String.length(result))
   end
 
   def all_pairs(string) do
