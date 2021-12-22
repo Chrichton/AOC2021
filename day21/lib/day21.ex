@@ -10,13 +10,7 @@ defmodule Day21 do
     track_player1 = Stream.cycle(1..10) |> Stream.drop(position_player1 - 1)
     track_player2 = Stream.cycle(1..10) |> Stream.drop(position_player2 - 1)
 
-    # {results, dice} = throw_dice_3_times(dice)
-    # {score, track_player1} = move_pawn(track_player1, results)
-
-    # {results, dice} = throw_dice_3_times(dice)
-    # {score, track_player2} = move_pawn(track_player2, results)
-
-    1
+    [1]
     |> Stream.cycle()
     |> Enum.reduce_while(
       {0, dice, 0, track_player1, 0, track_player2},
@@ -31,14 +25,21 @@ defmodule Day21 do
         score_player1 = score_player1 + actual_score_player1
         score_player2 = score_player2 + actual_score_player2
 
-        if score_player1 >= 1000 do
-        end
+        cond do
+          score_player1 >= 1000 ->
+            {:halt, score_player2 * roll_count}
 
-        {roll_count, dice, score_player1, track_player1, score_player2, track_player2}
+          score_player2 >= 1000 ->
+            {:halt, score_player1 * roll_count}
+
+          true ->
+            result =
+              {roll_count, dice, score_player1, track_player1, score_player2, track_player2}
+
+            {:cont, result}
+        end
       end
     )
-
-    # {number, dice} = throw_dice(dice)
   end
 
   def move_pawn(track, results) do
