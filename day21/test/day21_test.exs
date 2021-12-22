@@ -10,9 +10,9 @@ defmodule Day21Test do
   test "throw_dice" do
     dice = 1..2 |> Stream.cycle()
 
-    {number1, dice2} = Day21.throw_dice(dice)
-    {number2, dice3} = Day21.throw_dice(dice2)
-    {number3, _} = Day21.throw_dice(dice3)
+    {number1, dice} = Day21.throw_dice(dice)
+    {number2, dice} = Day21.throw_dice(dice)
+    {number3, _} = Day21.throw_dice(dice)
 
     assert number1 == 1
     assert number2 == 2
