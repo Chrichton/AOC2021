@@ -19,7 +19,6 @@ defmodule Day14 do
   def build_polymer_step(template, rules) do
     template
     |> all_pairs()
-    |> Enum.take(3)
     |> then(fn pairs ->
       replace_in_template(template, rules, pairs)
     end)
@@ -35,21 +34,20 @@ defmodule Day14 do
     end
   end
 
-  def replace_in_template(template, rules, [first_key, second_key, third_key]) do
-    first_index = index_of(template, first_key)
-    second_index = index_of(template, second_key)
-    third_index = index_of(template, third_key)
+  def replace_in_template(template, rules, keys) do
+    keys
+    |> Enum.map(fn key ->
+      {index_of(template, key), key}
+    end)
+    |> Enum.sort_by(fn {index, _key} -> index end)
+    |> Enum.reduce({template, 1}, fn {index, key}, {result, offset} ->
+      result =
+        String.slice(result, 0, index + offset) <>
+          rules[key] <> String.slice(result, index + offset, String.length(result))
 
-    result =
-      String.slice(template, 0, first_index + 1) <>
-        rules[first_key] <> String.slice(template, first_index + 1, String.length(template))
-
-    result =
-      String.slice(result, 0, second_index + 2) <>
-        rules[second_key] <> String.slice(result, second_index + 2, String.length(result))
-
-    String.slice(result, 0, third_index + 3) <>
-      rules[third_key] <> String.slice(result, third_index + 3, String.length(result))
+      {result, offset + 1}
+    end)
+    |> elem(0)
   end
 
   def all_pairs(string) do
