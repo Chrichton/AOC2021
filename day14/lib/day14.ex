@@ -5,7 +5,8 @@ defmodule Day14 do
     |> then(fn {template, rules} ->
       build_polymer(template, rules)
     end)
-    |> String.length()
+
+    # |> String.length()
   end
 
   def build_polymer(template, rules) do
@@ -58,9 +59,7 @@ defmodule Day14 do
     |> then(fn pairs ->
       pairs
       |> Enum.take(Enum.count(pairs) - 1)
-      |> Enum.map(fn [left, right] ->
-        left <> right
-      end)
+      |> Enum.map(&Enum.join/1)
     end)
   end
 
