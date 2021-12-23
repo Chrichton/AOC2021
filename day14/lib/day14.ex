@@ -5,14 +5,25 @@ defmodule Day14 do
     |> then(fn {template, rules} ->
       build_polymer(template, rules)
     end)
+    |> calculate_quantity_difference()
+  end
 
-    # |> String.length()
+  def calculate_quantity_difference(polymer_string) do
+    polymer_string
+    |> String.codepoints()
+    |> Enum.frequencies()
+
+    # |> then(fn frequencies_map ->
+    #   values = Map.values(frequencies_map)
+    #   # Enum.max(values) - Enum.min(values)
+    # end)
   end
 
   def build_polymer(template, rules) do
     1..10
     |> Enum.reduce(template, fn _step, acc ->
       build_polymer_step(acc, rules)
+      |> IO.inspect(label: "build_polymer_step")
     end)
   end
 

@@ -23,6 +23,16 @@ defmodule Day14Test do
     assert actual == "NCNBCHB"
   end
 
+  test "replace_in_template2" do
+    actual =
+      Day14.read_input("sample1")
+      |> then(fn {_template, rules} ->
+        Day14.replace_in_template("NBCCNBBBCBHCB", rules, Day14.all_pairs("NBCCNBBBCBHCB"))
+      end)
+
+    assert actual == "NBBBCNCCNBBNBNBBCHBHHBCHB"
+  end
+
   test "build_polymer_step" do
     actual =
       Day14.read_input("sample1")
