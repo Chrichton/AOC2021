@@ -12,18 +12,16 @@ defmodule Day14 do
     polymer_string
     |> String.codepoints()
     |> Enum.frequencies()
-
-    # |> then(fn frequencies_map ->
-    #   values = Map.values(frequencies_map)
-    #   # Enum.max(values) - Enum.min(values)
-    # end)
+    |> then(fn frequencies_map ->
+      values = Map.values(frequencies_map)
+      Enum.max(values) - Enum.min(values)
+    end)
   end
 
   def build_polymer(template, rules) do
     1..10
     |> Enum.reduce(template, fn _step, acc ->
       build_polymer_step(acc, rules)
-      |> IO.inspect(label: "build_polymer_step")
     end)
   end
 
@@ -50,15 +48,22 @@ defmodule Day14 do
     |> Enum.map(fn key ->
       {index_of(template, key), key}
     end)
-    |> Enum.sort_by(fn {index, _key} -> index end)
-    |> Enum.reduce({template, 1}, fn {index, key}, {result, offset} ->
+    |> Enum.reduce({template, []}, fn {index, key}, {result, used_indizes} ->
+      offset = lower_indizes_count(used_indizes, index) + 1
+
       result =
         String.slice(result, 0, index + offset) <>
           rules[key] <> String.slice(result, index + offset, String.length(result))
 
-      {result, offset + 1}
+      {result, [index | used_indizes]}
     end)
     |> elem(0)
+  end
+
+  def lower_indizes_count(indizes, index) do
+    indizes
+    |> Enum.filter(&(&1 - index < 0))
+    |> Enum.count()
   end
 
   def all_pairs(string) do

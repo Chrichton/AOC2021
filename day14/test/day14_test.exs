@@ -2,6 +2,26 @@ defmodule Day14Test do
   use ExUnit.Case
   doctest Day14
 
+  test "lower_indizes_count empty indizes" do
+    actual = Day14.lower_indizes_count([], 7)
+    assert actual == 0
+  end
+
+  test "lower_indizes_count higher index" do
+    actual = Day14.lower_indizes_count([0], 1)
+    assert actual == 1
+  end
+
+  test "lower_indizes_count lower index" do
+    actual = Day14.lower_indizes_count([1], 0)
+    assert actual == 0
+  end
+
+  test "lower_indizes_count" do
+    actual = Day14.lower_indizes_count([3, 12, 5, 11], 7)
+    assert actual == 2
+  end
+
   test "all_pairs" do
     assert Day14.all_pairs("NNCB") == ["NN", "NC", "CB"]
   end
@@ -31,6 +51,10 @@ defmodule Day14Test do
       end)
 
     assert actual == "NBBBCNCCNBBNBNBBCHBHHBCHB"
+
+    # korrekt
+    # "NBBBCNCCNBBNBNBBCHBHHBCHB"
+    # "NBBBBBCNCCNBNNBBCHHBHHBCB"
   end
 
   test "build_polymer_step" do
@@ -44,7 +68,7 @@ defmodule Day14Test do
   end
 
   test "sample first star" do
-    assert Day14.solve1("sample1") == 17
+    assert Day14.solve1("sample1") == 1588
   end
 
   test "first star" do
